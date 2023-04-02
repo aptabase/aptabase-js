@@ -20,7 +20,7 @@ npm add @aptabase/web
 yarn add @aptabase/web
 ```
 
-# Usage
+## Usage
 
 First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
 
