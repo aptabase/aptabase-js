@@ -32,9 +32,9 @@ import { init } from "@aptabase/web";
 init("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
 ```
 
-The init function also supports an optional second parameter, which is an object with the `appVersion` and `appBuildNumber` properties.
+The init function also supports an optional second parameter, which is an object with the `appVersion` property.
 
-It's up to you to decide what to get the values to use on these properties, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
+It's up to you to decide what to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
 
 Afterwards you can start tracking events with `trackEvent`:
 

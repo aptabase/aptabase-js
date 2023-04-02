@@ -5,7 +5,6 @@ const sdkVersion = "aptabase-web@env.PKG_VERSION";
 
 export type AptabaseOptions = {
   appVersion?: string;
-  appBuildNumber?: string;
 };
 
 let _appKey = "";
@@ -55,7 +54,6 @@ export function trackEvent(
     systemProps: {
       locale: _locale,
       appVersion: _options?.appVersion ?? "",
-      appBuildNumber: _options?.appBuildNumber ?? "",
       sdkVersion,
     },
     props: props,
