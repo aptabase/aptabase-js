@@ -1,2 +1,50 @@
-# aptabase-js
-JavaScript SDK for Aptabase: Privacy-first and simple analytics for apps
+![Aptabase](https://aptabase.com/og.png)
+
+# JavaScript SDK for Aptabase
+
+This plugin allows you to instrument your app with events that can be analyzed in Aptabase, a privacy-first analytics platform for Desktop and Mobile apps.
+
+## Install
+
+Install the SDK using your preferred JavaScript package manager
+
+```bash
+pnpm add @aptabase/web
+# or
+npm add @aptabase/web
+# or
+yarn add @aptabase/web
+```
+
+# Usage
+
+First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
+
+Initialized the SDK using your `App Key`:
+
+```js
+import { init } from "@aptabase/web";
+
+init("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
+```
+
+The init function also supports an optional second parameter, which is an object with the `appVersion` and `appBuildNumber` properties.
+
+It's up to you to decide what to get the values to use on these properties, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
+
+Afterwards you can start tracking events with `trackEvent`:
+
+```js
+import { trackEvent } from "@aptabase/web";
+
+trackEvent("connect_click"); // An event with no properties
+trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
+```
+
+A few important notes:
+
+1. The plugin will automatically enhance the event with some useful information, like the OS, the app version, and other things.
+2. You're in control of what gets sent to Aptabase. This plugin does not automatically track any events, you need to call `trackEvent` manually.
+   - Because of this, it's generally recommended to at least track an event at startup
+3. You do not need to await the `trackEvent` function, it'll run in the background.
+4. Only strings and numbers values are allowed on custom properties
