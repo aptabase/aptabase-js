@@ -4,7 +4,8 @@
 
 This plugin allows you to instrument your web app with events that can be analyzed in Aptabase, a privacy-first analytics platform for Desktop and Mobile apps.
 
-> IMPORTANT: This SDK is for **Web Applications**, not websites. There's a subtle, but important difference. A web app is often a lot more interactive and does not cause a full page reload when the user interacts with it. It's often called a **Single-Page Application**. A website, on the other hand, is a lot more content-focused like marketing sites, landing pages, blogs, etc. While you can certainly use Aptabase to track events on websites, please be aware that each page reload will be considered a new session.
+> **Note**
+> This SDK is for **Web Applications**, not websites. There's a subtle, but important difference. A web app is often a lot more interactive and does not cause a full page reload when the user interacts with it. It's often called a **Single-Page Application**. A website, on the other hand, is a lot more content-focused like marketing sites, landing pages, blogs, etc. While you can certainly use Aptabase to track events on websites, please be aware that each page reload will be considered a new session.
 
 ## Install
 
