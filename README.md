@@ -2,7 +2,7 @@
 
 # JavaScript SDK for Aptabase
 
-Instrument your apps with Aptabase, a privacy-first and simple analytics platform for apps.
+A tiny SDK (1 kB) to instrument your web app with Aptabase, a privacy-first analytics platform for desktop, mobile and web apps.
 
 > 👉 **IMPORTANT**
 >
