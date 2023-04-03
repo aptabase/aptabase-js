@@ -2,7 +2,7 @@
 
 # JavaScript SDK for Aptabase
 
-This plugin allows you to instrument your web app with events that can be analyzed in Aptabase, a privacy-first analytics platform for Desktop and Mobile apps.
+Instrument your apps with Aptabase, a privacy-first and simple analytics platform for apps.
 
 > 👉 **IMPORTANT**
 >
