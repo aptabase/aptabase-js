@@ -47,8 +47,8 @@ trackEvent("play_music", { name: "Here comes the sun" }); // An event with a cus
 
 A few important notes:
 
-1. The plugin will automatically enhance the event with some useful information, like the OS, the app version, and other things.
-2. You're in control of what gets sent to Aptabase. This plugin does not automatically track any events, you need to call `trackEvent` manually.
+1. The SDK will automatically enhance the event with some useful information, like the OS, the app version, and other things.
+2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
    - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.
 4. Only strings and numbers values are allowed on custom properties
