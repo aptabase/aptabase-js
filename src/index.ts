@@ -14,9 +14,9 @@ let _sessionId = newSessionId();
 let _options: AptabaseOptions | undefined;
 
 const regions: { [region: string]: string } = {
-  US: "https://api-us.aptabase.com",
-  EU: "https://api-eu.aptabase.com",
-  DEV: "http://localhost:5251",
+  US: "https://us.aptabase.com",
+  EU: "https://eu.aptabase.com",
+  DEV: "http://localhost:3000",
 };
 
 export function init(appKey: string, options?: AptabaseOptions) {
@@ -33,7 +33,7 @@ export function init(appKey: string, options?: AptabaseOptions) {
 
   const region = parts[1];
   const baseUrl = regions[region] ?? regions.DEV;
-  _apiUrl = `${baseUrl}/v0/event`;
+  _apiUrl = `${baseUrl}/api/v0/event`;
 
   _locale =
     navigator.languages && navigator.languages.length

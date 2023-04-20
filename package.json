@@ -1,8 +1,8 @@
 {
   "name": "@aptabase/web",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
-  "description": "JavaScript SDK for Aptabase: Privacy-first and simple analytics for apps",
+  "description": "JavaScript SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "browser": "dist/index.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
