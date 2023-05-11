@@ -35,17 +35,19 @@ export function init(appKey: string, options?: AptabaseOptions) {
   const baseUrl = regions[region] ?? regions.DEV;
   _apiUrl = `${baseUrl}/api/v0/event`;
 
-  _locale =
-    navigator.languages && navigator.languages.length
-      ? navigator.languages[0]
-      : navigator.language;
+  if (typeof navigator !== "undefined") {
+    _locale =
+      navigator.languages && navigator.languages.length
+        ? navigator.languages[0]
+        : navigator.language;
+  }
 }
 
 export function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>
 ) {
-  if (!_appKey || !window || !window.fetch) return;
+  if (!_appKey || typeof window === "undefined" || !window.fetch) return;
 
   const body = JSON.stringify({
     timestamp: new Date().toISOString(),

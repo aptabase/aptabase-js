@@ -1,6 +1,6 @@
 export function newSessionId() {
-  if (crypto && crypto.randomUUID) {
-    return crypto.randomUUID();
+  if (typeof crypto !== "undefined" && crypto && window.crypto.randomUUID) {
+    return window.crypto.randomUUID();
   }
 
   return `${randomString(8)}-${randomString(4)}-${randomString(
