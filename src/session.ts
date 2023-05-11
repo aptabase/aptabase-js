@@ -1,16 +1,20 @@
 export function newSessionId() {
-  if (typeof crypto !== "undefined" && crypto && window.crypto.randomUUID) {
-    return window.crypto.randomUUID();
+  if (typeof crypto !== "undefined" && crypto && crypto.randomUUID) {
+    return crypto.randomUUID();
   }
 
-  return `${randomString(8)}-${randomString(4)}-${randomString(
-    4
-  )}-${randomString(4)}-${randomString(12)}`;
+  return [
+    randomStr(8),
+    randomStr(4),
+    randomStr(4),
+    randomStr(4),
+    randomStr(12),
+  ].join("-");
 }
 
 const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
 const charactersLength = characters.length;
-function randomString(len: number) {
+function randomStr(len: number) {
   let result = "";
   for (let i = 0; i < len; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
