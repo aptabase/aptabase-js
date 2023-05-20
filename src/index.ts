@@ -4,6 +4,7 @@ import { newSessionId } from "./session";
 const sdkVersion = "aptabase-web@env.PKG_VERSION";
 
 export type AptabaseOptions = {
+  host?: string;
   appVersion?: string;
 };
 
@@ -11,29 +12,51 @@ let _appKey = "";
 let _locale = "";
 let _apiUrl = "";
 let _sessionId = newSessionId();
+let _isDebug = false;
 let _options: AptabaseOptions | undefined;
 
-const regions: { [region: string]: string } = {
+const _hosts: { [region: string]: string } = {
   US: "https://us.aptabase.com",
   EU: "https://eu.aptabase.com",
   DEV: "http://localhost:3000",
+  SH: "",
 };
+
+function getBaseUrl(
+  region: string,
+  options?: AptabaseOptions
+): string | undefined {
+  if (region === "SH") {
+    if (!options?.host) {
+      console.warn(
+        `Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`
+      );
+      return;
+    }
+    return options.host;
+  }
+
+  return _hosts[region];
+}
 
 export function init(appKey: string, options?: AptabaseOptions) {
   _appKey = appKey;
   _options = options;
 
   const parts = appKey.split("-");
-  if (parts.length !== 3) {
+  if (parts.length !== 3 || _hosts[parts[1]] === undefined) {
     console.warn(
       `The Aptabase App Key "${appKey}" is invalid. Tracking will be disabled.`
     );
     return;
   }
 
-  const region = parts[1];
-  const baseUrl = regions[region] ?? regions.DEV;
+  const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
+
+  if (typeof location !== "undefined") {
+    _isDebug = location.hostname === "localhost";
+  }
 
   if (typeof navigator !== "undefined") {
     _locale =
@@ -54,6 +77,7 @@ export function trackEvent(
     sessionId: _sessionId,
     eventName: eventName,
     systemProps: {
+      isDebug: _isDebug,
       locale: _locale,
       appVersion: _options?.appVersion ?? "",
       sdkVersion,

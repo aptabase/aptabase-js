@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Added support for automatic segregation of Debug/Release events
+
 ## 0.1.1
 
 - Refactor on session generator
