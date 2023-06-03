@@ -8,10 +8,13 @@ export type AptabaseOptions = {
   appVersion?: string;
 };
 
-let _appKey = "";
-let _locale = "";
-let _apiUrl = "";
+// Session expires after 1 hour of inactivity
+const SESSION_TIMEOUT = 1 * 60 * 60;
 let _sessionId = newSessionId();
+let _lastTouched = new Date();
+let _appKey = "";
+let _apiUrl = "";
+let _locale = "";
 let _isDebug = false;
 let _options: AptabaseOptions | undefined;
 
@@ -71,6 +74,14 @@ export function trackEvent(
   props?: Record<string, string | number | boolean>
 ) {
   if (!_appKey || typeof window === "undefined" || !window.fetch) return;
+
+  let now = new Date();
+  const diffInMs = now.getTime() - _lastTouched.getTime();
+  const diffInSec = Math.floor(diffInMs / 1000);
+  if (diffInSec > SESSION_TIMEOUT) {
+    _sessionId = newSessionId();
+  }
+  _lastTouched = now;
 
   const body = JSON.stringify({
     timestamp: new Date().toISOString(),
