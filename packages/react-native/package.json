@@ -1,0 +1,52 @@
+{
+  "name": "@aptabase/react-native",
+  "version": "0.2.0",
+  "private": false,
+  "description": "React Native SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
+  "sideEffects": false,
+  "author": "goenning <goenning@aptabase.com>",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aptabase/aptabase-react-native.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aptabase/aptabase-react-native/issues"
+  },
+  "homepage": "https://github.com/aptabase/aptabase-react-native",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run --coverage"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist",
+    "package.json",
+    "android",
+    "ios",
+    "aptabase-react-native.podspec"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-replace": "5.0.2",
+    "@vitest/coverage-v8": "0.34.2",
+    "vite": "4.4.9",
+    "vite-plugin-dts": "3.5.2",
+    "vitest": "0.34.2",
+    "vitest-fetch-mock": "0.2.2"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
