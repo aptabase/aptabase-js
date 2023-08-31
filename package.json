@@ -1,12 +1,9 @@
 {
-  "name": "aptabase",
-  "version": "0.6.9",
+  "name": "aptabase-js",
+  "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*",
-    "schemas/*",
-    "utils/*"
+    "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
