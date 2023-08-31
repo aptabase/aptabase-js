@@ -1,9 +1,9 @@
 {
-  "name": "@aptabase/web",
-  "version": "0.1.3",
+  "name": "@aptabase/next",
+  "version": "0.0.1",
   "private": false,
   "type": "module",
-  "description": "JavaScript SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
+  "description": "Next.js SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

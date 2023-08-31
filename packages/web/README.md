@@ -13,11 +13,7 @@ A tiny SDK (1 kB) to instrument your web app with Aptabase, an Open Source, Priv
 Install the SDK using your preferred JavaScript package manager
 
 ```bash
-pnpm add @aptabase/web
-# or
 npm add @aptabase/web
-# or
-yarn add @aptabase/web
 ```
 
 ## Usage
@@ -27,9 +23,9 @@ First you need to get your `App Key` from Aptabase, you can find it in the `Inst
 Initialized the SDK using your `App Key`:
 
 ```js
-import { init } from "@aptabase/web";
+import { init } from '@aptabase/web';
 
-init("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
+init('<YOUR_APP_KEY>'); // 👈 this is where you enter your App Key
 ```
 
 The init function also supports an optional second parameter, which is an object with the `appVersion` property.
@@ -39,10 +35,10 @@ It's up to you to decide what to get the version of your app, but it's generally
 Afterwards you can start tracking events with `trackEvent`:
 
 ```js
-import { trackEvent } from "@aptabase/web";
+import { trackEvent } from '@aptabase/web';
 
-trackEvent("connect_click"); // An event with no properties
-trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
+trackEvent('connect_click'); // An event with no properties
+trackEvent('play_music', { name: 'Here comes the sun' }); // An event with a custom property
 ```
 
 A few important notes:
