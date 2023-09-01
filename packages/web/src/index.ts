@@ -3,8 +3,8 @@ export type AptabaseOptions = {
   appVersion?: string;
 };
 
-const locale = navigator?.languages && navigator?.languages.length ? navigator?.languages[0] : navigator?.language;
-const isDebug = location?.hostname === 'localhost';
+const locale = getBrowserLocale();
+const isDebug = getIsDebug();
 
 let _appKey = '';
 let _apiUrl = '';
@@ -82,4 +82,28 @@ export function trackEvent(eventName: string, props?: Record<string, string | nu
       }
     })
     .catch(console.error);
+}
+
+function getBrowserLocale(): string | null {
+  if (typeof navigator === 'undefined') {
+    return null;
+  }
+
+  if (navigator.languages.length > 0) {
+    return navigator.languages[0];
+  }
+
+  return navigator.language;
+}
+
+function getIsDebug(): boolean {
+  if (process.env.NODE_ENV === 'development') {
+    return true;
+  }
+
+  if (typeof location === 'undefined') {
+    return false;
+  }
+
+  return location.hostname === 'localhost';
 }
