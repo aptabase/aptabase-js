@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es6",
     "strict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "types": ["@types"]
     },
     "declaration": true,
-    "declarationDir": "./dist",
-    "rootDir": "./src"
-  },
-  "include": ["./"]
+    "declarationDir": "./dist"
+  }
 }

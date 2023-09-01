@@ -3,13 +3,13 @@
   "version": "0.1.3",
   "type": "module",
   "description": "JavaScript SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },
@@ -24,10 +24,7 @@
   "homepage": "https://github.com/aptabase/aptabase-js",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c ./rollup.config.mjs",
-    "watch": "rollup -c ./rollup.config.mjs -w",
-    "prepublishOnly": "npm run build",
-    "pretest": "npm run build"
+    "build": "tsup"
   },
   "files": [
     "README.md",
@@ -36,11 +33,6 @@
     "package.json"
   ],
   "devDependencies": {
-    "@rollup/plugin-replace": "5.0.2",
-    "@rollup/plugin-typescript": "11.1.3",
-    "rollup": "3.28.1",
-    "@rollup/plugin-terser": "0.4.3",
-    "tslib": "2.6.2",
-    "typescript": "5.2.2"
+    "tsup": "7.2.0"
   }
 }
