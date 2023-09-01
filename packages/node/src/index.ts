@@ -14,7 +14,8 @@ export async function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>,
 ): Promise<void> {
-  const appKey = globalThis.__APTABASE__?.appKey;
+  const { appKey } = globalThis.__APTABASE__ || {};
+
   if (!appKey) return Promise.resolve();
 
   const userAgent = req.headers.get('user-agent') ?? '';
@@ -27,7 +28,7 @@ export async function trackEvent(
       isDebug: true,
       locale: 'en',
       appVersion: '',
-      sdkVersion: 'aptabase-node@0.1.0',
+      sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-node@${process.env.PKG_VERSION}`,
     },
     props: props,
   });

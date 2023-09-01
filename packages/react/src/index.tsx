@@ -3,9 +3,12 @@
 import { init, trackEvent, type AptabaseOptions } from '@aptabase/web';
 import { createContext, useContext, useEffect } from 'react';
 
+globalThis.__APTABASE_SDK_VERSION__ = `aptabase-react@${process.env.PKG_VERSION}`;
+
 type ContextProps = {
   appKey?: string;
-} & AptabaseOptions;
+  options?: AptabaseOptions;
+};
 
 export type AptabaseClient = {
   trackEvent: typeof trackEvent;
@@ -24,7 +27,7 @@ export function AptabaseProvider({ appKey, options, children }: Props) {
     init(appKey, options);
   }, [appKey, options]);
 
-  return <AptabaseContext.Provider value={{ appKey, ...options }}>{children}</AptabaseContext.Provider>;
+  return <AptabaseContext.Provider value={{ appKey, options }}>{children}</AptabaseContext.Provider>;
 }
 
 export function useAptabase(): AptabaseClient {

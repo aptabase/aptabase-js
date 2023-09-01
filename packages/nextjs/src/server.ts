@@ -3,6 +3,8 @@ import { type AptabaseOptions } from '@aptabase/node';
 import { type NextIncomingMessage } from 'next/dist/server/request-meta';
 import { headers } from 'next/headers';
 
+globalThis.__APTABASE_SDK_VERSION__ = `aptabase-nextjs@${process.env.PKG_VERSION}`;
+
 export function init(appKey: string, options?: AptabaseOptions): void {
   node.init(appKey, options);
 }

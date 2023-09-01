@@ -1,9 +1,9 @@
-// env.PKG_VERSION is replaced by rollup during build phase
-const sdkVersion = `aptabase-web@${process.env.PKG_VERSION}`;
+const sdkVersion = ;
 
 export type AptabaseOptions = {
   host?: string;
   appVersion?: string;
+  __sdkVersion?: string;
 };
 
 let _appKey = '';
@@ -64,7 +64,7 @@ export function trackEvent(eventName: string, props?: Record<string, string | nu
       isDebug: _isDebug,
       locale: _locale,
       appVersion: _options?.appVersion ?? '',
-      sdkVersion,
+      sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-web@${process.env.PKG_VERSION}`,
     },
     props: props,
   });

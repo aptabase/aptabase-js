@@ -4,3 +4,4 @@ type AptabaseState = {
 };
 
 declare var __APTABASE__: AptabaseState;
+declare var __APTABASE_SDK_VERSION__: string;
