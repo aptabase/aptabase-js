@@ -1,10 +1,8 @@
 import { Counter } from '@/components/Counter';
-import { trackEvent } from '@aptabase/nextjs/server';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  await trackEvent('page_view', { page: 'home' }, req);
   return { props: {} };
 };
 

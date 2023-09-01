@@ -1,4 +1,4 @@
-import { AptabaseProvider } from '@aptabase/nextjs/client';
+import { AptabaseProvider } from '@aptabase/react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
