@@ -2,6 +2,8 @@ import { AptabaseOptions } from './types';
 
 export { AptabaseOptions };
 
+const isDebug = process.env.NODE_ENV === 'development';
+
 export function init(appKey: string, options?: AptabaseOptions) {
   globalThis.__APTABASE__ = { appKey, options };
 }
@@ -15,18 +17,15 @@ export async function trackEvent(
   props?: Record<string, string | number | boolean>,
 ): Promise<void> {
   const { appKey } = globalThis.__APTABASE__ || {};
-
   if (!appKey) return Promise.resolve();
-
-  const userAgent = req.headers.get('user-agent') ?? '';
 
   const body = JSON.stringify({
     timestamp: new Date().toISOString(),
     sessionId: 'CHANGE-THIS',
     eventName: eventName,
     systemProps: {
-      isDebug: true,
-      locale: 'en',
+      isDebug,
+      locale: extractLocale(req.headers.get('accept-language')),
       appVersion: '',
       sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-node@${process.env.PKG_VERSION}`,
     },
@@ -37,7 +36,7 @@ export async function trackEvent(
     const response = await fetch('http://localhost:3000/api/v0/event', {
       method: 'POST',
       headers: {
-        'User-Agent': userAgent,
+        'User-Agent': req.headers.get('user-agent') ?? '',
         'Content-Type': 'application/json',
         'App-Key': appKey,
       },
@@ -52,4 +51,18 @@ export async function trackEvent(
   } catch (e) {
     console.warn(`Failed to send event "${eventName}": ${e}`);
   }
+}
+
+function extractLocale(locale: string | null): string | null {
+  if (!locale) {
+    return null;
+  }
+
+  const languageLocales = locale.split(',');
+  const firstLanguageLocale = languageLocales[0];
+  if (!firstLanguageLocale) {
+    return null;
+  }
+  const [language] = firstLanguageLocale.split(';');
+  return language || null;
 }

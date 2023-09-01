@@ -22,8 +22,8 @@ export async function trackEvent(
 
 function getHeaders(req?: NextIncomingMessage): Headers | undefined {
   if (req) {
-    // we only need the user-agent header
     return new Headers({
+      'accept-language': req.headers['accept-language'] ?? '',
       'user-agent': req.headers['user-agent'] ?? '',
     });
   }

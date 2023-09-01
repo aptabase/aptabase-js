@@ -1,13 +1,13 @@
 export type AptabaseOptions = {
   host?: string;
   appVersion?: string;
-  __sdkVersion?: string;
 };
+
+const locale = navigator?.languages && navigator?.languages.length ? navigator?.languages[0] : navigator?.language;
+const isDebug = location?.hostname === 'localhost';
 
 let _appKey = '';
 let _apiUrl = '';
-let _locale = '';
-let _isDebug = false;
 let _options: AptabaseOptions | undefined;
 
 const _hosts: { [region: string]: string } = {
@@ -41,26 +41,25 @@ export function init(appKey: string, options?: AptabaseOptions) {
 
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
-
-  if (typeof location !== 'undefined') {
-    _isDebug = location.hostname === 'localhost';
-  }
-
-  if (typeof navigator !== 'undefined') {
-    _locale = navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language;
-  }
 }
 
 export function trackEvent(eventName: string, props?: Record<string, string | number | boolean>) {
-  if (!_appKey || typeof window === 'undefined' || !window.fetch) return;
+  if (!_appKey) return;
+
+  if (typeof window === 'undefined' || !window.fetch) {
+    console.warn(
+      `Aptabase: this call to "trackEvent" requires a browser environment. Did you import from the wrong package?`,
+    );
+    return;
+  }
 
   const body = JSON.stringify({
     timestamp: new Date().toISOString(),
     sessionId: 'CHANGE-THIS',
     eventName: eventName,
     systemProps: {
-      isDebug: _isDebug,
-      locale: _locale,
+      isDebug,
+      locale,
       appVersion: _options?.appVersion ?? '',
       sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-web@${process.env.PKG_VERSION}`,
     },
