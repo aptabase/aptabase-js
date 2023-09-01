@@ -1,5 +1,9 @@
-export function init(appKey: string) {
-  globalThis.__APTABASE__ = { appKey };
+import { AptabaseOptions } from './types';
+
+export { AptabaseOptions };
+
+export function init(appKey: string, options?: AptabaseOptions) {
+  globalThis.__APTABASE__ = { appKey, options };
 }
 
 // We only need the headers from the request object

@@ -1,8 +1,11 @@
-import { trackEvent as nodeTrackEvent } from '@aptabase/node';
+import * as node from '@aptabase/node';
+import { type AptabaseOptions } from '@aptabase/node';
 import { type NextIncomingMessage } from 'next/dist/server/request-meta';
 import { headers } from 'next/headers';
 
-export { init } from '@aptabase/node';
+export function init(appKey: string, options?: AptabaseOptions): void {
+  node.init(appKey, options);
+}
 
 export async function trackEvent(
   eventName: string,
@@ -12,7 +15,7 @@ export async function trackEvent(
   const headers = getHeaders(req);
   if (!headers) return Promise.resolve();
 
-  return nodeTrackEvent({ headers }, eventName, props);
+  return node.trackEvent({ headers }, eventName, props);
 }
 
 function getHeaders(req?: NextIncomingMessage): Headers | undefined {
