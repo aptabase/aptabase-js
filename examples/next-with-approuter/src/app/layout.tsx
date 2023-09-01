@@ -4,7 +4,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AptabaseProvider appKey="A-DEV-0000000000">{children}</AptabaseProvider>
+        <AptabaseProvider appKey="A-US-5431775171">{children}</AptabaseProvider>
       </body>
     </html>
   );
