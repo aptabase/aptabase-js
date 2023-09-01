@@ -1,3 +1,5 @@
+import { newSessionId } from './session';
+
 export type AptabaseOptions = {
   host?: string;
   appVersion?: string;
@@ -6,6 +8,10 @@ export type AptabaseOptions = {
 const locale = getBrowserLocale();
 const isDebug = getIsDebug();
 
+// Session expires after 1 hour of inactivity
+const SESSION_TIMEOUT = 1 * 60 * 60;
+let _sessionId = newSessionId();
+let _lastTouched = new Date();
 let _appKey = '';
 let _apiUrl = '';
 let _options: AptabaseOptions | undefined;
@@ -35,11 +41,17 @@ export async function trackEvent(eventName: string, props?: Record<string, strin
   if (!_appKey) return;
 
   if (typeof window === 'undefined' || !window.fetch) {
-    console.warn(
-      `Aptabase: this call to "trackEvent" requires a browser environment. Did you import from the wrong package?`,
-    );
+    console.warn(`Aptabase: trackEvent requires a browser environment. Event "${eventName}" will not be tracked.`);
     return;
   }
+
+  let now = new Date();
+  const diffInMs = now.getTime() - _lastTouched.getTime();
+  const diffInSec = Math.floor(diffInMs / 1000);
+  if (diffInSec > SESSION_TIMEOUT) {
+    _sessionId = newSessionId();
+  }
+  _lastTouched = now;
 
   try {
     const response = await window.fetch(_apiUrl, {
@@ -51,7 +63,7 @@ export async function trackEvent(eventName: string, props?: Record<string, strin
       credentials: 'omit',
       body: JSON.stringify({
         timestamp: new Date().toISOString(),
-        sessionId: 'CHANGE-THIS',
+        sessionId: _sessionId,
         eventName: eventName,
         systemProps: {
           isDebug,
