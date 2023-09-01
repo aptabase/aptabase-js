@@ -1,5 +1,5 @@
 // env.PKG_VERSION is replaced by rollup during build phase
-const sdkVersion = 'aptabase-web@env.PKG_VERSION';
+const sdkVersion = `aptabase-web@${process.env.PKG_VERSION}`;
 
 export type AptabaseOptions = {
   host?: string;
