@@ -1,5 +1,6 @@
 type AptabaseState = {
-  appKey?: string;
+  appKey: string;
+  apiUrl: string;
   options?: import('./types').AptabaseOptions;
 };
 

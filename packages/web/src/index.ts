@@ -17,18 +17,6 @@ const _hosts: { [region: string]: string } = {
   SH: '',
 };
 
-function getBaseUrl(region: string, options?: AptabaseOptions): string | undefined {
-  if (region === 'SH') {
-    if (!options?.host) {
-      console.warn(`Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`);
-      return;
-    }
-    return options.host;
-  }
-
-  return _hosts[region];
-}
-
 export function init(appKey: string, options?: AptabaseOptions) {
   _appKey = appKey;
   _options = options;
@@ -43,7 +31,7 @@ export function init(appKey: string, options?: AptabaseOptions) {
   _apiUrl = `${baseUrl}/api/v0/event`;
 }
 
-export function trackEvent(eventName: string, props?: Record<string, string | number | boolean>) {
+export async function trackEvent(eventName: string, props?: Record<string, string | number | boolean>): Promise<void> {
   if (!_appKey) return;
 
   if (typeof window === 'undefined' || !window.fetch) {
@@ -53,35 +41,47 @@ export function trackEvent(eventName: string, props?: Record<string, string | nu
     return;
   }
 
-  const body = JSON.stringify({
-    timestamp: new Date().toISOString(),
-    sessionId: 'CHANGE-THIS',
-    eventName: eventName,
-    systemProps: {
-      isDebug,
-      locale,
-      appVersion: _options?.appVersion ?? '',
-      sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-web@${process.env.PKG_VERSION}`,
-    },
-    props: props,
-  });
-
-  window
-    .fetch(_apiUrl, {
+  try {
+    const response = await window.fetch(_apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'App-Key': _appKey,
       },
       credentials: 'omit',
-      body,
-    })
-    .then((response) => {
-      if (response.status >= 300) {
-        console.warn(`Failed to send event "${eventName}": ${response.status} ${response.statusText}`);
-      }
-    })
-    .catch(console.error);
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        sessionId: 'CHANGE-THIS',
+        eventName: eventName,
+        systemProps: {
+          isDebug,
+          locale,
+          appVersion: _options?.appVersion ?? '',
+          sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-web@${process.env.PKG_VERSION}`,
+        },
+        props: props,
+      }),
+    });
+
+    if (response.status >= 300) {
+      const responseBody = await response.text();
+      console.warn(`Failed to send event "${eventName}": ${response.status} ${responseBody}`);
+    }
+  } catch (e) {
+    console.warn(`Failed to send event "${eventName}": ${e}`);
+  }
+}
+
+function getBaseUrl(region: string, options?: AptabaseOptions): string | undefined {
+  if (region === 'SH') {
+    if (!options?.host) {
+      console.warn(`Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`);
+      return;
+    }
+    return options.host;
+  }
+
+  return _hosts[region];
 }
 
 function getBrowserLocale(): string | null {

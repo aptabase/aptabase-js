@@ -4,8 +4,23 @@ export { AptabaseOptions };
 
 const isDebug = process.env.NODE_ENV === 'development';
 
+const _hosts: { [region: string]: string } = {
+  US: 'https://us.aptabase.com',
+  EU: 'https://eu.aptabase.com',
+  DEV: 'http://localhost:3000',
+  SH: '',
+};
+
 export function init(appKey: string, options?: AptabaseOptions) {
-  globalThis.__APTABASE__ = { appKey, options };
+  const parts = appKey.split('-');
+  if (parts.length !== 3 || _hosts[parts[1]] === undefined) {
+    console.warn(`Aptabase: The App Key "${appKey}" is invalid. Tracking will be disabled.`);
+    return;
+  }
+
+  const baseUrl = getBaseUrl(parts[1], options);
+  const apiUrl = `${baseUrl}/api/v0/event`;
+  globalThis.__APTABASE__ = { appKey, apiUrl, options };
 }
 
 // We only need the headers from the request object
@@ -16,24 +31,11 @@ export async function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>,
 ): Promise<void> {
-  const { appKey } = globalThis.__APTABASE__ || {};
+  const { appKey, apiUrl, options } = globalThis.__APTABASE__ || {};
   if (!appKey) return Promise.resolve();
 
-  const body = JSON.stringify({
-    timestamp: new Date().toISOString(),
-    sessionId: 'CHANGE-THIS',
-    eventName: eventName,
-    systemProps: {
-      isDebug,
-      locale: extractLocale(req.headers.get('accept-language')),
-      appVersion: '',
-      sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-node@${process.env.PKG_VERSION}`,
-    },
-    props: props,
-  });
-
   try {
-    const response = await fetch('http://localhost:3000/api/v0/event', {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'User-Agent': req.headers.get('user-agent') ?? '',
@@ -41,7 +43,18 @@ export async function trackEvent(
         'App-Key': appKey,
       },
       credentials: 'omit',
-      body,
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        sessionId: 'CHANGE-THIS',
+        eventName: eventName,
+        systemProps: {
+          isDebug,
+          locale: extractLocale(req.headers.get('accept-language')),
+          appVersion: options,
+          sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-node@${process.env.PKG_VERSION}`,
+        },
+        props: props,
+      }),
     });
 
     if (response.status >= 300) {
@@ -51,6 +64,18 @@ export async function trackEvent(
   } catch (e) {
     console.warn(`Failed to send event "${eventName}": ${e}`);
   }
+}
+
+function getBaseUrl(region: string, options?: AptabaseOptions): string | undefined {
+  if (region === 'SH') {
+    if (!options?.host) {
+      console.warn(`Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`);
+      return;
+    }
+    return options.host;
+  }
+
+  return _hosts[region];
 }
 
 function extractLocale(locale: string | null): string | null {
