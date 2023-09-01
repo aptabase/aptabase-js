@@ -24,7 +24,8 @@
   "homepage": "https://github.com/aptabase/aptabase-js",
   "license": "MIT",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "README.md",
@@ -33,7 +34,7 @@
     "package.json"
   ],
   "dependencies": {
-    "@aptabase/web": "*"
+    "@aptabase/web": "0.2.0"
   },
   "peerDependencies": {
     "react": "^18.0.0"
