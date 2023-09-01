@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/nextjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "description": "Next.js SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "types": "./dist/index.d.ts",
