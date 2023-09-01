@@ -1,23 +1,23 @@
 {
-  "name": "@aptabase/next",
+  "name": "@aptabase/nextjs",
   "version": "0.0.1",
-  "private": false,
   "type": "module",
   "description": "Next.js SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aptabase/aptabase-js.git",
-    "directory": "packages/js"
+    "directory": "packages/nextjs"
   },
   "bugs": {
     "url": "https://github.com/aptabase/aptabase-js/issues"
@@ -25,10 +25,7 @@
   "homepage": "https://github.com/aptabase/aptabase-js",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c ./rollup.config.mjs",
-    "watch": "rollup -c ./rollup.config.mjs -w",
-    "prepublishOnly": "npm run build",
-    "pretest": "npm run build"
+    "build": "tsc"
   },
   "files": [
     "README.md",
@@ -43,5 +40,9 @@
     "@rollup/plugin-terser": "0.4.3",
     "tslib": "2.6.2",
     "typescript": "5.2.2"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "next": "^13.0.0"
   }
 }

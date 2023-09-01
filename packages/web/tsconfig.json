@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ES5",
     "strict": true,
-    "allowJs": true,
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
