@@ -4,6 +4,8 @@
 
 A tiny SDK (1 kB) to instrument your web app with Aptabase, an Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps.
 
+Building a React app? Use the `@aptabase/react` package instead.
+
 > 👉 **IMPORTANT**
 >
 > This SDK is for **Web Applications**, not websites. There's a subtle, but important difference. A web app is often a lot more interactive and does not cause a full page reload when the user interacts with it. It's often called a **Single-Page Application**. A website, on the other hand, is a lot more content-focused like marketing sites, landing pages, blogs, etc. While you can certainly use Aptabase to track events on websites, please be aware that each page reload will be considered a new session.

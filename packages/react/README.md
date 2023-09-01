@@ -1,0 +1,113 @@
+![Aptabase](https://aptabase.com/og.png)
+
+# React SDK for Aptabase
+
+A tiny SDK (1 kB) to instrument your React apps with Aptabase, an Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps.
+
+## Setup
+
+1. Install the SDK using your preferred JavaScript package manager
+
+```bash
+npm add @aptabase/react
+```
+
+2. Get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
+
+3. Initialize the `AptabaseProvider` component to your app based on your framework.
+
+<details>
+  <summary>Setup for Next.js (App Router)</summary>
+  
+  Add `AptabaseProvider` to your RootLayout component:
+
+```tsx
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <AptabaseProvider appKey="A-US-5431775171">{children}</AptabaseProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+</details>
+
+<details>
+  <summary>Setup for Next.js (Pages Router)</summary>
+</details>
+
+<details>
+  <summary>Setup for Remix</summary>
+</details>
+
+<details>
+  <summary>Setup for Create React App or Vite</summary>
+
+Add `AptabaseProvider` to your root component:
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <AptabaseProvider appKey="<YOUR_APP_KEY>">
+      <YourApp />
+    </AptabaseProvider>
+  </React.StrictMode>,
+);
+```
+
+</details>
+
+## Advanced setup
+
+The `AptabaseProvider` also supports an optional second parameter, which is an object with the `appVersion` property.
+
+It's up to you to decide what to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
+
+## Tracking Events with Aptabase
+
+After setting up the `AptabaseProvider`, you can then start tracking events using the `useAptabase` hook.
+
+Here's an example of a simple counter component that tracks the `increment` and `decrement` events:
+
+```js
+'use client';
+
+import { useState } from 'react';
+import { useAptabase } from '@aptabase/react';
+
+export function Counter() {
+  const { trackEvent } = useAptabase();
+  const [count, setCount] = useState(0);
+
+  function increment() {
+    setCount((c) => c + 1);
+    trackEvent('increment', { count });
+  }
+
+  function decrement() {
+    setCount((c) => c - 1);
+    trackEvent('decrement', { count });
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+```
+
+A few important notes:
+
+1. The SDK will automatically enhance the event with some useful information, like the OS, the app version, and other things.
+2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
+   - Because of this, it's generally recommended to at least track an event at startup
+3. You do not need to await the `trackEvent` function, it'll run in the background.
+4. Only strings and numbers values are allowed on custom properties

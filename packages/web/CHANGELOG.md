@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Some internal refactor to support the new `@aptabase/react` package
+
 ## 0.1.3
 
 - Add automatic session timeout after 1 hour of inactivity
