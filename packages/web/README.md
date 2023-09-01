@@ -49,4 +49,4 @@ A few important notes:
 2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
    - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.
-4. Only strings and numbers values are allowed on custom properties
+4. Only strings and numeric values are allowed on custom properties

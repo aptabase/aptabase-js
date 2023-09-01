@@ -22,6 +22,8 @@ npm add @aptabase/react
   Add `AptabaseProvider` to your RootLayout component:
 
 ```tsx
+import { AptabaseProvider } from '@aptabase/react';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -37,10 +39,47 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 <details>
   <summary>Setup for Next.js (Pages Router)</summary>
+
+Add `AptabaseProvider` to your `_app` component:
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+import type { AppProps } from 'next/app';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <AptabaseProvider appKey="A-DEV-0000000000">
+      <Component {...pageProps} />
+    </AptabaseProvider>
+  );
+}
+```
+
 </details>
 
 <details>
   <summary>Setup for Remix</summary>
+
+Add `AptabaseProvider` to your `entry.client.tsx` file:
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+import { RemixBrowser } from '@remix-run/react';
+import { startTransition, StrictMode } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+
+startTransition(() => {
+  hydrateRoot(
+    document,
+    <StrictMode>
+      <AptabaseProvider appKey="A-DEV-0000000000">
+        <RemixBrowser />
+      </AptabaseProvider>
+    </StrictMode>,
+  );
+});
+```
+
 </details>
 
 <details>
@@ -110,4 +149,4 @@ A few important notes:
 2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
    - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.
-4. Only strings and numbers values are allowed on custom properties
+4. Only strings and numeric values are allowed on custom properties
