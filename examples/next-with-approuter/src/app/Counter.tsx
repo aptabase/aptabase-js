@@ -1,6 +1,6 @@
 'use client';
 
-import { useAptabase } from '@aptabase/nextjs';
+import { useAptabase } from '@aptabase/nextjs/client';
 import { useState } from 'react';
 
 export function Counter() {

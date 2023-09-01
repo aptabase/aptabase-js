@@ -12,6 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "tsup": "7.2.0",
+    "@types/node": "20.5.7",
     "prettier": "3.0.3",
     "turbo": "1.10.13"
   },

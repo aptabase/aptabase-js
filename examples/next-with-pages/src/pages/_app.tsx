@@ -1,4 +1,4 @@
-import { AptabaseProvider } from '@aptabase/nextjs';
+import { AptabaseProvider } from '@aptabase/nextjs/client';
 import type { AppProps } from 'next/app';
 
 export default function App({ Component, pageProps }: AppProps) {
