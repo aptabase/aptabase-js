@@ -1,5 +1,3 @@
-const sdkVersion = ;
-
 export type AptabaseOptions = {
   host?: string;
   appVersion?: string;
