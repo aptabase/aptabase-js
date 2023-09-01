@@ -68,7 +68,8 @@ export async function trackEvent(eventName: string, props?: Record<string, strin
       console.warn(`Failed to send event "${eventName}": ${response.status} ${responseBody}`);
     }
   } catch (e) {
-    console.warn(`Failed to send event "${eventName}": ${e}`);
+    console.warn(`Failed to send event "${eventName}"`);
+    console.warn(e);
   }
 }
 
