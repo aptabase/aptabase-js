@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AptabaseProvider appKey="A-US-5431775171">{children}</AptabaseProvider>
+        <AptabaseProvider appKey="<YOUR_APP_KEY>">{children}</AptabaseProvider>
       </body>
     </html>
   );
@@ -48,7 +48,7 @@ import type { AppProps } from 'next/app';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <AptabaseProvider appKey="A-DEV-0000000000">
+    <AptabaseProvider appKey="<YOUR_APP_KEY>">
       <Component {...pageProps} />
     </AptabaseProvider>
   );
@@ -72,7 +72,7 @@ startTransition(() => {
   hydrateRoot(
     document,
     <StrictMode>
-      <AptabaseProvider appKey="A-DEV-0000000000">
+      <AptabaseProvider appKey="<YOUR_APP_KEY>">
         <RemixBrowser />
       </AptabaseProvider>
     </StrictMode>,

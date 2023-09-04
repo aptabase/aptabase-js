@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { init, trackEvent, type AptabaseOptions } from "@aptabase/web";
-import { createContext, useContext, useEffect } from "react";
+import { init, trackEvent, type AptabaseOptions } from '@aptabase/web';
+import { createContext, useContext, useEffect } from 'react';
 
 globalThis.__APTABASE_SDK_VERSION__ = `aptabase-react@${process.env.PKG_VERSION}`;
 
@@ -27,20 +27,32 @@ export function AptabaseProvider({ appKey, options, children }: Props) {
     init(appKey, options);
   }, [appKey, options]);
 
-  return (
-    <AptabaseContext.Provider value={{ appKey, options }}>
-      {children}
-    </AptabaseContext.Provider>
-  );
+  return <AptabaseContext.Provider value={{ appKey, options }}>{children}</AptabaseContext.Provider>;
 }
 
 export function useAptabase(): AptabaseClient {
   const ctx = useContext(AptabaseContext);
+
+  if (typeof window !== 'undefined') {
+    return {
+      trackEvent: (eventName: string) => {
+        console.warn(
+          `Aptabase: trackEvent can only be called from client components. Event '${eventName}' will be ignored.`,
+        );
+        return Promise.resolve();
+      },
+    };
+  }
+
   if (!ctx.appKey) {
-    console.error(
-      "Aptabase: useAptabase must be used within AptabaseProvider. Did you forget to wrap your app in <AptabaseProvider>?"
-    );
-    return { trackEvent: () => Promise.resolve() };
+    return {
+      trackEvent: () => {
+        console.warn(
+          `Aptabase: useAptabase must be used within AptabaseProvider. Did you forget to wrap your app in <AptabaseProvider>?`,
+        );
+        return Promise.resolve();
+      },
+    };
   }
 
   return { trackEvent };
