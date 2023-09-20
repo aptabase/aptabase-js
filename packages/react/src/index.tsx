@@ -33,7 +33,7 @@ export function AptabaseProvider({ appKey, options, children }: Props) {
 export function useAptabase(): AptabaseClient {
   const ctx = useContext(AptabaseContext);
 
-  if (typeof window !== 'undefined') {
+  if (typeof window === 'undefined') {
     return {
       trackEvent: (eventName: string) => {
         console.warn(

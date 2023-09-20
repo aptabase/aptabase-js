@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Fixed an issue with client-side checking
+
 ## 0.1.1
 
 - Remove warning log from Server Side Rendering
