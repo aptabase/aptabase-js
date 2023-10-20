@@ -3,10 +3,10 @@ import { newSessionId } from './session';
 export type AptabaseOptions = {
   host?: string;
   appVersion?: string;
+  isDebug?: boolean;
 };
 
 const locale = getBrowserLocale();
-const isDebug = getIsDebug();
 
 // Session expires after 1 hour of inactivity
 const SESSION_TIMEOUT = 1 * 60 * 60;
@@ -14,7 +14,8 @@ let _sessionId = newSessionId();
 let _lastTouched = new Date();
 let _appKey = '';
 let _apiUrl = '';
-let _options: AptabaseOptions | undefined;
+let _isDebug = false;
+let _appVersion = '';
 
 const _hosts: { [region: string]: string } = {
   US: 'https://us.aptabase.com',
@@ -24,9 +25,6 @@ const _hosts: { [region: string]: string } = {
 };
 
 export function init(appKey: string, options?: AptabaseOptions) {
-  _appKey = appKey;
-  _options = options;
-
   const parts = appKey.split('-');
   if (parts.length !== 3 || _hosts[parts[1]] === undefined) {
     console.warn(`The Aptabase App Key "${appKey}" is invalid. Tracking will be disabled.`);
@@ -35,6 +33,9 @@ export function init(appKey: string, options?: AptabaseOptions) {
 
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
+  _appKey = appKey;
+  _isDebug = options?.isDebug ?? getIsDebug();
+  _appVersion = options?.appVersion ?? '';
 }
 
 export async function trackEvent(eventName: string, props?: Record<string, string | number | boolean>): Promise<void> {
@@ -66,9 +67,9 @@ export async function trackEvent(eventName: string, props?: Record<string, strin
         sessionId: _sessionId,
         eventName: eventName,
         systemProps: {
-          isDebug,
           locale,
-          appVersion: _options?.appVersion ?? '',
+          isDebug: _isDebug,
+          appVersion: _appVersion,
           sdkVersion: globalThis.__APTABASE_SDK_VERSION__ ?? `aptabase-web@${process.env.PKG_VERSION}`,
         },
         props: props,

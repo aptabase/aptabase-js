@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Updated dependencies
+
 ## 0.1.2
 
 - Fixed an issue with client-side checking

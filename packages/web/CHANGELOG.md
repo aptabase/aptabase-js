@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Added an option to specify `isDebug` at init time
+
 ## 0.2.0
 
 - Some internal refactor to support the new `@aptabase/react` package
