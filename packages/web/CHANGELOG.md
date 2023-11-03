@@ -1,3 +1,7 @@
+## 0.3.1
+
+- use new session id format
+
 ## 0.3.0
 
 - Added an option to specify `isDebug` at init time
