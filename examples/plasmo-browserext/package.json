@@ -1,0 +1,32 @@
+{
+  "name": "plasmo-browserext",
+  "displayName": "Plasmo browserext",
+  "version": "0.0.1",
+  "description": "A basic Plasmo extension.",
+  "author": "Plasmo Corp. <foss@plasmo.com>",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "test": "plasmo test"
+  },
+  "dependencies": {
+    "plasmo": "0.84.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@aptabase/browser": "*"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.254",
+    "@types/react": "18.2.45",
+    "@types/react-dom": "18.2.17",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "permissions": [
+      "storage"
+    ],
+    "host_permissions": [
+      "https://*/*"
+    ]
+  }
+}

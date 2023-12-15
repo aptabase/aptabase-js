@@ -1,0 +1,36 @@
+{
+  "name": "@aptabase/browser",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser Extension SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aptabase/aptabase-js.git",
+    "directory": "packages/browser"
+  },
+  "bugs": {
+    "url": "https://github.com/aptabase/aptabase-js/issues"
+  },
+  "homepage": "https://github.com/aptabase/aptabase-js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist",
+    "package.json"
+  ]
+}

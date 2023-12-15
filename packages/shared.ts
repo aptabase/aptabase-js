@@ -1,6 +1,7 @@
 const defaultLocale = getBrowserLocale();
 const defaultIsDebug = getIsDebug();
 const isInBrowser = typeof window !== 'undefined' && typeof window.fetch !== 'undefined';
+const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime.id;
 
 let _sessionId = newSessionId();
 let _lastTouched = new Date();
@@ -79,7 +80,7 @@ export async function sendEvent(opts: {
   eventName: string;
   props?: Record<string, string | number | boolean>;
 }): Promise<void> {
-  if (!isInBrowser) {
+  if (!isInBrowser && !isInBrowserExtension) {
     console.warn(`Aptabase: trackEvent requires a browser environment. Event "${opts.eventName}" will be discarded.`);
     return;
   }
