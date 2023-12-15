@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Internal refactor
+
 ## 0.3.2
 
 - better version of the session id generator

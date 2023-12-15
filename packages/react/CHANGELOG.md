@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Internal refactor
+
 ## 0.2.2
 
 - Updated dependencies

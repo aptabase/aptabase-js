@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/react",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "type": "module",
   "description": "React SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "main": "./dist/index.cjs",
@@ -33,9 +33,6 @@
     "dist",
     "package.json"
   ],
-  "dependencies": {
-    "@aptabase/web": "^0.3.0"
-  },
   "peerDependencies": {
     "react": "^18.0.0"
   }

@@ -1,12 +1,12 @@
 ![Aptabase](https://aptabase.com/og.png)
 
-# React SDK for Aptabase
+# Aptabase SDK for React Apps
 
 A tiny SDK (1 kB) to instrument your React apps with Aptabase, an Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps.
 
 ## Setup
 
-1. Install the SDK using your preferred JavaScript package manager
+1. Install the SDK using npm or your preferred JavaScript package manager
 
 ```bash
 npm add @aptabase/react
@@ -105,6 +105,8 @@ ReactDOM.createRoot(root).render(
 
 The `AptabaseProvider` also supports an optional second parameter, which is an object with the `appVersion` property.
 
+It's up to you to decide how to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time. Alternatively you can also pass it in manually.
+
 It's up to you to decide what to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
 
 ## Tracking Events with Aptabase
@@ -145,7 +147,7 @@ export function Counter() {
 
 A few important notes:
 
-1. The SDK will automatically enhance the event with some useful information, like the OS, the app version, and other things.
+1. The SDK will automatically enhance the event with some useful information, like the OS and other properties.
 2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
    - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.

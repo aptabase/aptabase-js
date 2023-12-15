@@ -13,5 +13,10 @@
       "source.organizeImports": true
     }
   },
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "[typescript][typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  }
 }

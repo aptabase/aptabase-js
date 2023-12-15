@@ -1,6 +1,6 @@
 ![Aptabase](https://aptabase.com/og.png)
 
-# JavaScript SDK for Aptabase
+# Aptabase SDK for Web Apps
 
 A tiny SDK (1 kB) to instrument your web app with Aptabase, an Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps.
 
@@ -12,7 +12,7 @@ Building a React app? Use the `@aptabase/react` package instead.
 
 ## Install
 
-Install the SDK using your preferred JavaScript package manager
+Install the SDK using npm or your preferred JavaScript package manager
 
 ```bash
 npm add @aptabase/web
@@ -22,7 +22,7 @@ npm add @aptabase/web
 
 First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
 
-Initialized the SDK using your `App Key`:
+Initialize the SDK using your `App Key`:
 
 ```js
 import { init } from '@aptabase/web';
@@ -32,7 +32,7 @@ init('<YOUR_APP_KEY>'); // 👈 this is where you enter your App Key
 
 The init function also supports an optional second parameter, which is an object with the `appVersion` property.
 
-It's up to you to decide what to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
+It's up to you to decide how to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time. Alternatively you can also pass it in manually.
 
 Afterwards you can start tracking events with `trackEvent`:
 
@@ -45,7 +45,7 @@ trackEvent('play_music', { name: 'Here comes the sun' }); // An event with a cus
 
 A few important notes:
 
-1. The SDK will automatically enhance the event with some useful information, like the OS, the app version, and other things.
+1. The SDK will automatically enhance the event with some useful information, like the OS and other properties.
 2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
    - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.

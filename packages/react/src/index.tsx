@@ -1,18 +1,40 @@
 'use client';
 
-import { init, trackEvent, type AptabaseOptions } from '@aptabase/web';
 import { createContext, useContext, useEffect } from 'react';
+import { inMemorySessionId, sendEvent, validateAppKey, type AptabaseOptions } from '../../shared';
 
-globalThis.__APTABASE_SDK_VERSION__ = `aptabase-react@${process.env.PKG_VERSION}`;
+// Session expires after 1 hour of inactivity
+const SESSION_TIMEOUT = 1 * 60 * 60;
+const sdkVersion = `aptabase-react@${process.env.PKG_VERSION}`;
+
+let _appKey = '';
+let _options: AptabaseOptions | undefined;
 
 type ContextProps = {
   appKey?: string;
   options?: AptabaseOptions;
 };
 
-export type AptabaseClient = {
-  trackEvent: typeof trackEvent;
-};
+function init(appKey: string, options?: AptabaseOptions) {
+  if (!validateAppKey(appKey)) return;
+
+  _appKey = appKey;
+  _options = options;
+}
+
+async function trackEvent(eventName: string, props?: Record<string, string | number | boolean>): Promise<void> {
+  const sessionId = inMemorySessionId(SESSION_TIMEOUT);
+
+  await sendEvent({
+    sessionId,
+    appKey: _appKey,
+    isDebug: _options?.isDebug,
+    appVersion: _options?.appVersion,
+    sdkVersion,
+    eventName,
+    props,
+  });
+}
 
 const AptabaseContext = createContext<ContextProps>({});
 
@@ -20,6 +42,12 @@ type Props = {
   appKey: string;
   options?: AptabaseOptions;
   children: React.ReactNode;
+};
+
+export { type AptabaseOptions };
+
+export type AptabaseClient = {
+  trackEvent: typeof trackEvent;
 };
 
 export function AptabaseProvider({ appKey, options, children }: Props) {
@@ -33,17 +61,6 @@ export function AptabaseProvider({ appKey, options, children }: Props) {
 export function useAptabase(): AptabaseClient {
   const ctx = useContext(AptabaseContext);
 
-  if (typeof window === 'undefined') {
-    return {
-      trackEvent: (eventName: string) => {
-        console.warn(
-          `Aptabase: trackEvent can only be called from client components. Event '${eventName}' will be ignored.`,
-        );
-        return Promise.resolve();
-      },
-    };
-  }
-
   if (!ctx.appKey) {
     return {
       trackEvent: () => {
@@ -55,5 +72,7 @@ export function useAptabase(): AptabaseClient {
     };
   }
 
-  return { trackEvent };
+  return {
+    trackEvent,
+  };
 }
