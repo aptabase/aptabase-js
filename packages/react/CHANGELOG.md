@@ -1,3 +1,11 @@
+## 0.3.3
+
+- Rename `apiPath` to `apiUrl`
+
+## 0.3.2
+
+- Fix error when running on chrome
+
 ## 0.3.1
 
 - Support for custom API path

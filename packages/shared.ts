@@ -1,7 +1,7 @@
 const defaultLocale = getBrowserLocale();
 const defaultIsDebug = getIsDebug();
 const isInBrowser = typeof window !== 'undefined' && typeof window.fetch !== 'undefined';
-const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime.id;
+const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime?.id;
 
 let _sessionId = newSessionId();
 let _lastTouched = new Date();
@@ -17,7 +17,7 @@ export type AptabaseOptions = {
   // Custom host for self-hosted Aptabase.
   host?: string;
   // Custom path for API endpoint. Useful when using reverse proxy.
-  apiPath?: string;
+  apiUrl?: string;
   // Defines the app version.
   appVersion?: string;
   // Defines whether the app is running on debug mode.
@@ -55,8 +55,6 @@ export function validateAppKey(appKey: string): boolean {
 }
 
 export function getApiUrl(appKey: string, options?: AptabaseOptions): string | undefined {
-  const apiPath = options?.apiPath ?? '/api/v0/event';
-
   const region = appKey.split('-')[1];
   if (region === 'SH') {
     if (!options?.host) {
@@ -64,11 +62,11 @@ export function getApiUrl(appKey: string, options?: AptabaseOptions): string | u
       return;
     }
 
-    return `${options.host}${apiPath}`;
+    return `${options.host}/api/v0/event`;
   }
 
   const host = options?.host ?? _hosts[region];
-  return `${host}${apiPath}`;
+  return `${host}/api/v0/event`;
 }
 
 export async function sendEvent(opts: {

@@ -19,7 +19,7 @@ type ContextProps = {
 function init(appKey: string, options?: AptabaseOptions) {
   if (!validateAppKey(appKey)) return;
 
-  _apiUrl = getApiUrl(appKey, options);
+  _apiUrl = options?.apiUrl ?? getApiUrl(appKey, options);
   _appKey = appKey;
   _options = options;
 }

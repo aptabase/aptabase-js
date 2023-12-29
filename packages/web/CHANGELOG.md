@@ -1,3 +1,7 @@
+## 0.4.2
+
+- Fix error when running on chrome
+
 ## 0.4.1
 
 - Support for custom API path
