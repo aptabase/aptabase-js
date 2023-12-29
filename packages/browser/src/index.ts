@@ -1,4 +1,4 @@
-import { newSessionId, sendEvent, validateAppKey, type AptabaseOptions } from '../../shared';
+import { getApiUrl, newSessionId, sendEvent, validateAppKey, type AptabaseOptions } from '../../shared';
 
 // Session expires after 1 hour of inactivity
 const SESSION_TIMEOUT = 1 * 60 * 60;
@@ -6,6 +6,7 @@ const sdkVersion = `aptabase-browser@${process.env.PKG_VERSION}`;
 const isWebContext = 'document' in globalThis;
 
 let _appKey = '';
+let _apiUrl: string | undefined;
 let _options: AptabaseOptions | undefined;
 
 globalThis.aptabase = {
@@ -13,7 +14,7 @@ globalThis.aptabase = {
   trackEvent,
 };
 
-export function init(appKey: string, options?: AptabaseOptions) {
+export async function init(appKey: string, options?: AptabaseOptions): Promise<void> {
   if (isWebContext) {
     console.error('@aptabase/browser can only be initialized in your background script.');
     return;
@@ -21,8 +22,14 @@ export function init(appKey: string, options?: AptabaseOptions) {
 
   if (!validateAppKey(appKey)) return;
 
+  const ext = await chrome.management.getSelf();
+
+  const isDebug = options?.isDebug ?? ext.installType === 'development';
+  const appVersion = options?.appVersion ?? chrome.runtime.getManifest().version;
+
+  _apiUrl = options?.apiUrl ?? getApiUrl(appKey, options);
   _appKey = appKey;
-  _options = { ...options, appVersion: options?.appVersion ?? chrome.runtime.getManifest().version };
+  _options = { ...options, isDebug, appVersion };
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message && message.type === '__aptabase__trackEvent') {
@@ -36,9 +43,11 @@ export async function trackEvent(eventName: string, props?: Record<string, strin
     return chrome.runtime.sendMessage({ type: '__aptabase__trackEvent', eventName, props });
   }
 
+  if (!_apiUrl) return;
   const sessionId = await getSessionId();
 
   return sendEvent({
+    apiUrl: _apiUrl,
     sessionId,
     appKey: _appKey,
     isDebug: _options?.isDebug,

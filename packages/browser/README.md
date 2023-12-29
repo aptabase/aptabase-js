@@ -24,7 +24,7 @@ import { init } from '@aptabase/browser';
 init('<YOUR_APP_KEY>'); // 👈 this is where you enter your App Key
 ```
 
-The init function also supports an optional second parameter, which is an object with the `isDebug` property. Your data is seggregated between development and production environments, so it's important to set this value correctly. By default the SDK will use the `NODE_ENV` environment variable to determine if it's in development or production mode, which is only available in bundlers like Webpack, Rollup, etc. If you're not using a bundler, you can pass in the `isDebug` property manually.
+The `init` function also supports an optional second parameter, which is an object with the `isDebug`property. Your data is segregated between development and production environments, so it's important to set this value correctly. By default the SDK will check if the extension was installed from an Extension Store, and if it wasn't it'll assume it's in development mode. If you want to override this behavior, you can set the`isDebug` property.
 
 Afterwards you can start tracking events with `trackEvent` from anywhere in your extension:
 
