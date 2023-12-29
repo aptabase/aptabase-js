@@ -1,3 +1,7 @@
+## 0.4.1
+
+- Support for custom API path
+
 ## 0.4.0
 
 - Internal refactor

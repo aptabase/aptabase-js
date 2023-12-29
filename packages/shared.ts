@@ -6,8 +6,6 @@ const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime.i
 let _sessionId = newSessionId();
 let _lastTouched = new Date();
 
-const apiUrl: Record<string, string> = {};
-
 const _hosts: { [region: string]: string } = {
   US: 'https://us.aptabase.com',
   EU: 'https://eu.aptabase.com',
@@ -16,8 +14,13 @@ const _hosts: { [region: string]: string } = {
 };
 
 export type AptabaseOptions = {
+  // Custom host for self-hosted Aptabase.
   host?: string;
+  // Custom path for API endpoint. Useful when using reverse proxy.
+  apiPath?: string;
+  // Defines the app version.
   appVersion?: string;
+  // Defines whether the app is running on debug mode.
   isDebug?: boolean;
 };
 
@@ -51,26 +54,25 @@ export function validateAppKey(appKey: string): boolean {
   return true;
 }
 
-function getApiUrl(appKey: string, options?: AptabaseOptions): string | undefined {
-  const url = apiUrl[appKey];
-  if (url) url;
+export function getApiUrl(appKey: string, options?: AptabaseOptions): string | undefined {
+  const apiPath = options?.apiPath ?? '/api/v0/event';
 
   const region = appKey.split('-')[1];
-  let host = _hosts[region];
   if (region === 'SH') {
     if (!options?.host) {
       console.warn(`Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`);
       return;
     }
 
-    host = options.host;
+    return `${options.host}${apiPath}`;
   }
 
-  apiUrl[appKey] = `${host}/api/v0/event`;
-  return apiUrl[appKey];
+  const host = options?.host ?? _hosts[region];
+  return `${host}${apiPath}`;
 }
 
 export async function sendEvent(opts: {
+  apiUrl: string;
   appKey?: string;
   sessionId: string;
   locale?: string;
@@ -90,11 +92,8 @@ export async function sendEvent(opts: {
     return;
   }
 
-  const apiUrl = getApiUrl(opts.appKey);
-  if (!apiUrl) return;
-
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(opts.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
