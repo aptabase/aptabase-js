@@ -1,0 +1,23 @@
+{
+  "name": "@aptabase/angular",
+  "version": "0.0.1",
+  "description": "Angular SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aptabase/aptabase-js.git",
+    "directory": "packages/angular/aptabase-angular"
+  },
+  "bugs": {
+    "url": "https://github.com/aptabase/aptabase-js/issues"
+  },
+  "homepage": "https://github.com/aptabase/aptabase-js",
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.3.0",
+    "@angular/core": "^17.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
