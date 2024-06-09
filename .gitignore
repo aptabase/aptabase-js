@@ -30,3 +30,17 @@ dist
 build
 .next
 .plasmo
+
+# misc
+.angular
+.storybook/documentation.json
+.sass-cache
+connect.lock
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# shared file copied in angular lib folder
+/packages/angular/aptabase-angular/src/shared.ts

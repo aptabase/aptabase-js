@@ -135,7 +135,7 @@ function getBrowserLocale(): string | undefined {
 }
 
 function getIsDebug(): boolean {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     return true;
   }
 
