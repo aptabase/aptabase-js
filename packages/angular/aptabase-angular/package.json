@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/angular",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "Angular SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "repository": {
     "type": "git",
@@ -12,9 +12,14 @@
   },
   "homepage": "https://github.com/aptabase/aptabase-js",
   "license": "MIT",
+  "scripts": {
+    "pre-build": "cp ../../shared.ts ./src",
+    "build": "npm run pre-build &&  ng build aptabase-angular",
+    "prepublishOnly": "npm run build"
+  },
   "peerDependencies": {
-    "@angular/common": "^17.3.0",
-    "@angular/core": "^17.3.0"
+    "@angular/common": "^17.0.0",
+    "@angular/core": "^17.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
