@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Move browser locale and is debug reads from import to first event to better support SSR
+
 ## 0.1.1
 
 - Support for custom API path
