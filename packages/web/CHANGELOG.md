@@ -1,3 +1,7 @@
+## 0.4.3
+
+- Move browser locale and is debug reads from import to first event to better support SSR
+
 ## 0.4.2
 
 - Fix error when running on chrome

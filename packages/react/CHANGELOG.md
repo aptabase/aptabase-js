@@ -1,3 +1,7 @@
+## 0.3.4
+
+- Move browser locale and is debug reads from import to first event to better support SSR
+
 ## 0.3.3
 
 - Rename `apiPath` to `apiUrl`

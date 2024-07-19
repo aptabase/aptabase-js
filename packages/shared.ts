@@ -1,5 +1,5 @@
-const defaultLocale = getBrowserLocale();
-const defaultIsDebug = getIsDebug();
+let defaultLocale: string | undefined;
+let defaultIsDebug: boolean | undefined;
 const isInBrowser = typeof window !== 'undefined' && typeof window.fetch !== 'undefined';
 const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime?.id;
 
@@ -103,8 +103,8 @@ export async function sendEvent(opts: {
         sessionId: opts.sessionId,
         eventName: opts.eventName,
         systemProps: {
-          locale: opts.locale ?? defaultLocale,
-          isDebug: opts.isDebug ?? defaultIsDebug,
+          locale: opts.locale ?? getBrowserLocale(),
+          isDebug: opts.isDebug ?? getIsDebug(),
           appVersion: opts.appVersion ?? '',
           sdkVersion: opts.sdkVersion,
         },
@@ -123,25 +123,39 @@ export async function sendEvent(opts: {
 }
 
 function getBrowserLocale(): string | undefined {
+  if (defaultLocale) {
+    return defaultLocale;
+  }
+
   if (typeof navigator === 'undefined') {
     return undefined;
   }
 
   if (navigator.languages.length > 0) {
-    return navigator.languages[0];
+    defaultLocale = navigator.languages[0];
+  } else {
+    defaultLocale = navigator.language;
   }
 
-  return navigator.language;
+  return defaultLocale;
 }
 
 function getIsDebug(): boolean {
+  if (defaultIsDebug !== undefined) {
+    return defaultIsDebug;
+  }
+
   if (process.env['NODE_ENV'] === 'development') {
-    return true;
+    defaultIsDebug = true;
+    return defaultIsDebug;
   }
 
   if (typeof location === 'undefined') {
-    return false;
+    defaultIsDebug = false;
+    return defaultIsDebug;
   }
 
-  return location.hostname === 'localhost';
+  defaultIsDebug = location.hostname === 'localhost';
+
+  return defaultIsDebug;
 }

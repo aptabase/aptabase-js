@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/angular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Angular SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "scripts": {
     "ng": "ng",
