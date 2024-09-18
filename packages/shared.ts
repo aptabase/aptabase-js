@@ -9,7 +9,7 @@ let _lastTouched = new Date();
 const _hosts: { [region: string]: string } = {
   US: 'https://us.aptabase.com',
   EU: 'https://eu.aptabase.com',
-  DEV: 'http://localhost:3000',
+  DEV: 'https://localhost:3000',
   SH: '',
 };
 
