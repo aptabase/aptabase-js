@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { getApiUrl, inMemorySessionId, sendEvent, validateAppKey, type AptabaseOptions } from '../../shared';
 
 // Session expires after 1 hour of inactivity
@@ -10,10 +10,12 @@ const sdkVersion = `aptabase-react@${process.env.PKG_VERSION}`;
 let _appKey = '';
 let _apiUrl: string | undefined;
 let _options: AptabaseOptions | undefined;
+let _eventsBeforeInit: { [key: string]: Record<string, string | number | boolean> | undefined } = {};
 
 type ContextProps = {
   appKey?: string;
   options?: AptabaseOptions;
+  isInitialized: boolean;
 };
 
 function init(appKey: string, options?: AptabaseOptions) {
@@ -22,6 +24,11 @@ function init(appKey: string, options?: AptabaseOptions) {
   _apiUrl = options?.apiUrl ?? getApiUrl(appKey, options);
   _appKey = appKey;
   _options = options;
+
+  Object.keys(_eventsBeforeInit).forEach((eventName) => {
+    trackEvent(eventName, _eventsBeforeInit[eventName]);
+  });
+  _eventsBeforeInit = {};
 }
 
 async function trackEvent(eventName: string, props?: Record<string, string | number | boolean>): Promise<void> {
@@ -41,7 +48,12 @@ async function trackEvent(eventName: string, props?: Record<string, string | num
   });
 }
 
-const AptabaseContext = createContext<ContextProps>({});
+function trackEventBeforeInit(eventName: string, props?: Record<string, string | number | boolean>): Promise<void> {
+  _eventsBeforeInit[eventName] = props;
+  return Promise.resolve();
+}
+
+const AptabaseContext = createContext<ContextProps>({ isInitialized: false });
 
 type Props = {
   appKey: string;
@@ -56,11 +68,14 @@ export type AptabaseClient = {
 };
 
 export function AptabaseProvider({ appKey, options, children }: Props) {
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
     init(appKey, options);
+    setIsInitialized(true);
   }, [appKey, options]);
 
-  return <AptabaseContext.Provider value={{ appKey, options }}>{children}</AptabaseContext.Provider>;
+  return <AptabaseContext.Provider value={{ appKey, options, isInitialized }}>{children}</AptabaseContext.Provider>;
 }
 
 export function useAptabase(): AptabaseClient {
@@ -74,6 +89,12 @@ export function useAptabase(): AptabaseClient {
         );
         return Promise.resolve();
       },
+    };
+  }
+
+  if (!ctx.isInitialized) {
+    return {
+      trackEvent: trackEventBeforeInit,
     };
   }
 
