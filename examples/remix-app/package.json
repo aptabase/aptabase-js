@@ -1,4 +1,5 @@
 {
+  "name": "remix-example",
   "private": true,
   "sideEffects": false,
   "scripts": {
