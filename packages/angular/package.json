@@ -1,5 +1,6 @@
 {
   "name": "@aptabase/angular",
+  "private": true,
   "version": "0.0.2",
   "description": "Angular SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "scripts": {
@@ -11,7 +12,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",
