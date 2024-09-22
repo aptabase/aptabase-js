@@ -27,6 +27,9 @@
     "build": "tsup",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "README.md",
     "LICENSE",
