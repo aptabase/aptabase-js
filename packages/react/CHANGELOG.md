@@ -1,3 +1,9 @@
+## 0.3.5
+
+### Patch Changes
+
+- 7ea8c11: fix: events tracked at page load are sometimes not sent
+
 ## 0.3.4
 
 - Move browser locale and is debug reads from import to first event to better support SSR
