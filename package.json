@@ -9,6 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "build-packages": "turbo run build --filter=./packages/*",
+    "ci:publish": "npm run build-packages && npx changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
