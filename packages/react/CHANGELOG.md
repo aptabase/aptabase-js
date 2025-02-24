@@ -1,5 +1,11 @@
 ## 0.3.5
 
+## 0.4.0
+
+### Minor Changes
+
+- 0eb5c9f: react 19 as peer dep
+
 ### Patch Changes
 
 - 7ea8c11: fix: events tracked at page load are sometimes not sent
