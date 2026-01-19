@@ -1,6 +1,7 @@
 let defaultLocale: string | undefined;
 let defaultIsDebug: boolean | undefined;
-const isInBrowser = typeof window !== 'undefined' && typeof window.fetch !== 'undefined';
+const hasFetchApi = typeof fetch === 'function';
+const isInBrowser = typeof window !== 'undefined';
 const isInBrowserExtension = typeof chrome !== 'undefined' && !!chrome.runtime?.id;
 
 let _sessionId = newSessionId();
@@ -80,8 +81,8 @@ export async function sendEvent(opts: {
   eventName: string;
   props?: Record<string, string | number | boolean>;
 }): Promise<void> {
-  if (!isInBrowser && !isInBrowserExtension) {
-    console.warn(`Aptabase: trackEvent requires a browser environment. Event "${opts.eventName}" will be discarded.`);
+  if (!hasFetchApi && !isInBrowserExtension) {
+    console.warn(`Aptabase: trackEvent requires fetch api. Event "${opts.eventName}" will be discarded.`);
     return;
   }
 
@@ -90,10 +91,18 @@ export async function sendEvent(opts: {
     return;
   }
 
+  let extraHeaders: Record<string, string> = {};
+  if (!isInBrowser && !isInBrowserExtension) {
+    extraHeaders = {
+      'User-Agent': getUserAgent(),
+    };
+  }
+
   try {
     const response = await fetch(opts.apiUrl, {
       method: 'POST',
       headers: {
+        ...extraHeaders,
         'Content-Type': 'application/json',
         'App-Key': opts.appKey,
       },
@@ -158,4 +167,28 @@ function getIsDebug(): boolean {
   defaultIsDebug = location.hostname === 'localhost';
 
   return defaultIsDebug;
+}
+
+function getUserAgent(): string {
+  let platform = 'Unknown';
+  if (process?.platform) {
+    platform = getOperatingSystem(process.platform);
+  }
+  
+  return `Mozilla/5.0 (${platform}) Not-A-Browser`;
+}
+
+function getOperatingSystem(platform: string): string {
+  switch (platform) {
+    case 'darwin':
+      return 'Macintosh';
+    case 'win32':
+      return 'Windows';
+    case 'linux':
+      return 'Linux';
+    case 'android':
+      return 'Android';
+    default:
+      return platform;
+  }
 }
