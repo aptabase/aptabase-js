@@ -1,5 +1,11 @@
 ## 0.4.3
 
+## 0.5.0
+
+### Minor Changes
+
+- ab220cb: Support for Node environments for web package
+
 - Move browser locale and is debug reads from import to first event to better support SSR
 
 ## 0.4.2
