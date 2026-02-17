@@ -2,7 +2,7 @@ import { Counter } from '@/components/Counter';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return { props: {} };
 };
 
