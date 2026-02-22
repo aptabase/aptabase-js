@@ -6,3 +6,5 @@ This repository hosts the code for:
 - [SDK for Browser Extensions](./packages/browser/README.md)
 - [SDK for React / Remix / Next.js](./packages/react/README.md)
 - [SDK for Angular](./packages/angular/README.md)
+
+For AI/LLM integration instructions, see [llms.txt](./llms.txt)
