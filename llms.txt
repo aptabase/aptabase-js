@@ -1,0 +1,253 @@
+# Aptabase JavaScript SDKs
+
+> Privacy-first, open-source analytics for Web, React, Angular, and Browser Extension apps. This monorepo contains 4 packages: @aptabase/web, @aptabase/react, @aptabase/angular, and @aptabase/browser. All packages are GDPR-compliant and require no cookie banners.
+
+## @aptabase/web — SDK for Web Apps (SPAs)
+
+Install:
+
+```bash
+npm add @aptabase/web
+```
+
+Initialize:
+
+```js
+import { init } from '@aptabase/web';
+
+init('<YOUR_APP_KEY>');
+```
+
+Track events:
+
+```js
+import { trackEvent } from '@aptabase/web';
+
+trackEvent('page_view');
+trackEvent('play_music', { name: 'Here comes the sun' });
+```
+
+The `init` function accepts an optional second parameter:
+
+```js
+init('<YOUR_APP_KEY>', {
+  host: 'https://self-hosted.example.com',  // Self-hosted Aptabase URL
+  apiUrl: 'https://proxy.example.com/api/v0/event',  // Custom API endpoint (reverse proxy)
+  appVersion: '1.0.0',  // App version string
+  isDebug: false,  // Override debug mode detection
+});
+```
+
+Notes:
+- Designed for Single-Page Applications (SPAs). Each full page reload starts a new session.
+- Sessions auto-rotate after 1 hour of inactivity.
+- Property values must be strings, numbers, or booleans.
+- `trackEvent` runs in the background — no need to await it.
+- Debug mode is auto-detected from `NODE_ENV` or `localhost` hostname.
+
+## @aptabase/react — SDK for React / Next.js / Remix / Vite
+
+Install:
+
+```bash
+npm add @aptabase/react
+```
+
+### Next.js App Router setup
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <AptabaseProvider appKey="<YOUR_APP_KEY>">{children}</AptabaseProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Next.js Pages Router setup
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+import type { AppProps } from 'next/app';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <AptabaseProvider appKey="<YOUR_APP_KEY>">
+      <Component {...pageProps} />
+    </AptabaseProvider>
+  );
+}
+```
+
+### Remix setup
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+import { RemixBrowser } from '@remix-run/react';
+import { startTransition, StrictMode } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+
+startTransition(() => {
+  hydrateRoot(
+    document,
+    <StrictMode>
+      <AptabaseProvider appKey="<YOUR_APP_KEY>">
+        <RemixBrowser />
+      </AptabaseProvider>
+    </StrictMode>,
+  );
+});
+```
+
+### Create React App / Vite setup
+
+```tsx
+import { AptabaseProvider } from '@aptabase/react';
+
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <AptabaseProvider appKey="<YOUR_APP_KEY>">
+      <YourApp />
+    </AptabaseProvider>
+  </React.StrictMode>,
+);
+```
+
+### Track events with useAptabase hook
+
+```tsx
+'use client';
+
+import { useAptabase } from '@aptabase/react';
+
+export function MyComponent() {
+  const { trackEvent } = useAptabase();
+
+  function handleClick() {
+    trackEvent('button_click', { label: 'signup' });
+  }
+
+  return <button onClick={handleClick}>Sign Up</button>;
+}
+```
+
+`AptabaseProvider` accepts optional `options` prop with the same fields as `@aptabase/web` init options (`host`, `apiUrl`, `appVersion`, `isDebug`).
+
+Notes:
+- Uses React Context — wrap your app root with `AptabaseProvider`.
+- `useAptabase()` returns `{ trackEvent, trackError }`.
+- Events fired before initialization completes are queued and sent automatically.
+- The `'use client'` directive is required for components using `useAptabase` in Next.js App Router.
+
+## @aptabase/angular — SDK for Angular Apps
+
+Install:
+
+```bash
+npm add @aptabase/angular
+```
+
+### Standalone API setup
+
+```ts
+import { provideAptabaseAnalytics } from '@aptabase/angular';
+
+bootstrapApplication(AppComponent, {
+  providers: [provideAptabaseAnalytics('<YOUR_APP_KEY>')],
+}).catch((err) => console.error(err));
+```
+
+### NgModule setup
+
+```ts
+import { AptabaseAnalyticsModule } from '@aptabase/angular';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [AptabaseAnalyticsModule.forRoot('<YOUR_APP_KEY>')],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+### Track events via service injection
+
+```ts
+import { AptabaseAnalyticsService } from '@aptabase/angular';
+
+export class AppComponent {
+  constructor(private _analyticsService: AptabaseAnalyticsService) {}
+
+  onAction() {
+    this._analyticsService.trackEvent('action_performed');
+    this._analyticsService.trackEvent('item_added', { itemId: 'abc123', price: 9.99 });
+  }
+}
+```
+
+Both `provideAptabaseAnalytics` and `AptabaseAnalyticsModule.forRoot` accept an optional second parameter:
+
+```ts
+type AptabaseOptions = {
+  host?: string;       // Self-hosted Aptabase URL
+  apiUrl?: string;     // Custom API endpoint (reverse proxy)
+  appVersion?: string; // App version
+  isDebug?: boolean;   // Override debug mode
+};
+```
+
+Notes:
+- Supports both standalone API (`provideAptabaseAnalytics`) and NgModule (`AptabaseAnalyticsModule.forRoot`).
+- Inject `AptabaseAnalyticsService` in any component or service to track events.
+
+## @aptabase/browser — SDK for Browser/Chrome Extensions
+
+Install:
+
+```bash
+npm add @aptabase/browser
+```
+
+Initialize in your **background script** (service worker):
+
+```js
+import { init } from '@aptabase/browser';
+
+init('<YOUR_APP_KEY>');
+```
+
+Track events from **anywhere** in your extension (background, popup, content scripts):
+
+```js
+import { trackEvent } from '@aptabase/browser';
+
+trackEvent('popup_opened');
+trackEvent('feature_used', { feature: 'dark_mode' });
+```
+
+Init options:
+
+```js
+init('<YOUR_APP_KEY>', {
+  host: 'https://self-hosted.example.com',
+  apiUrl: 'https://proxy.example.com/api/v0/event',
+  appVersion: '1.0.0',
+  isDebug: false,  // Default: auto-detected from installType
+});
+```
+
+Notes:
+- `init()` must be called in the background script (service worker), NOT in popup or content scripts.
+- `trackEvent()` can be called from any context — events from popup/content scripts are relayed to the background script via `chrome.runtime.sendMessage`.
+- Debug mode is auto-detected: `development` installType → debug, store install → production.
+- App version is auto-read from `chrome.runtime.getManifest().version`.
+- Session ID is persisted in `chrome.storage.local` to survive service worker restarts.
+
+## Cross-Discovery
+
+For all Aptabase SDKs (Swift, Kotlin, Flutter, Electron, Tauri, .NET MAUI, React Native, Python, Unity, Unreal, C++), see: https://aptabase.com/llms.txt
