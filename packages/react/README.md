@@ -148,6 +148,42 @@ Render `<TestEventButton />` anywhere inside `AptabaseProvider`, start your app 
 
 If nothing shows up, check the browser console for `Aptabase:` warnings (e.g. an invalid App Key or a component rendered outside `AptabaseProvider`).
 
+## Tracking Events with Aptabase
+
+Once your first event shows up, track the user actions you care about the same way. Here's an example of a simple counter component that tracks the `increment` and `decrement` events:
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { useAptabase } from '@aptabase/react';
+
+export function Counter() {
+  const { trackEvent } = useAptabase();
+  const [count, setCount] = useState(0);
+
+  function increment() {
+    const next = count + 1;
+    setCount(next);
+    trackEvent('increment', { count: next });
+  }
+
+  function decrement() {
+    const next = count - 1;
+    setCount(next);
+    trackEvent('decrement', { count: next });
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+```
+
 ## Where to call `trackEvent`
 
 Track **user actions**, not rendering. Call `trackEvent` from event handlers like `onClick`, `onSubmit` or `onChange`, never directly in the component body or inside `useEffect`.
