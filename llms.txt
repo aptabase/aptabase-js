@@ -120,27 +120,32 @@ ReactDOM.createRoot(root).render(
 
 ### Track events with useAptabase hook
 
+Call `trackEvent` from event handlers (user actions). A complete client component that sends a test event:
+
 ```tsx
 'use client';
 
 import { useAptabase } from '@aptabase/react';
 
-export function MyComponent() {
+export function TestEventButton() {
   const { trackEvent } = useAptabase();
 
   function handleClick() {
-    trackEvent('button_click', { label: 'signup' });
+    trackEvent('test_event', { source: 'quickstart' });
   }
 
-  return <button onClick={handleClick}>Sign Up</button>;
+  return <button onClick={handleClick}>Send test event</button>;
 }
 ```
 
-`AptabaseProvider` accepts optional `options` prop with the same fields as `@aptabase/web` init options (`host`, `apiUrl`, `appVersion`, `isDebug`).
+To confirm it works: run the app locally, click the button, then open the app in the Aptabase dashboard, switch to the **Debug** build mode (Bug/Rocket icon at the top right) and open **Live View**. Events from `localhost` or `NODE_ENV=development` are recorded as Debug; production builds as Release.
+
+`AptabaseProvider` accepts optional `options` prop with the same fields as `@aptabase/web` init options (`host`, `apiUrl`, `appVersion`, `isDebug`). Define the options object outside the component so it isn't recreated on every render.
 
 Notes:
 - Uses React Context — wrap your app root with `AptabaseProvider`.
-- `useAptabase()` returns `{ trackEvent, trackError }`.
+- `useAptabase()` returns `{ trackEvent }`.
+- Do NOT call `trackEvent` directly in the component body or inside `useEffect`. React re-renders (and Strict Mode double-invokes renders/effects in development), so render-time tracking counts re-renders as user activity. Track user actions from event handlers.
 - Events fired before initialization completes are queued and sent automatically.
 - The `'use client'` directive is required for components using `useAptabase` in Next.js App Router.
 
