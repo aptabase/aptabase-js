@@ -103,19 +103,56 @@ ReactDOM.createRoot(root).render(
 
 ## Advanced setup
 
-The `AptabaseProvider` also supports an optional second parameter, which is an object with the `appVersion` property.
+The `AptabaseProvider` also accepts an optional `options` prop, which supports the `appVersion`, `isDebug`, `host` and `apiUrl` properties.
 
 It's up to you to decide how to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time. Alternatively you can also pass it in manually.
 
-It's up to you to decide what to get the version of your app, but it's generally recommended to use your bundler (like Webpack, Vite, Rollup, etc.) to inject the values at build time.
+```tsx
+// Define options outside of the component so the object isn't recreated on every render
+const aptabaseOptions = { appVersion: '1.0.0' };
+
+<AptabaseProvider appKey="<YOUR_APP_KEY>" options={aptabaseOptions}>
+  <YourApp />
+</AptabaseProvider>
+```
+
+## Send your first event
+
+After setting up the `AptabaseProvider`, use the `useAptabase` hook to get `trackEvent` and call it from an event handler.
+
+Here's a complete client component with a button that sends a test event:
+
+```tsx
+'use client';
+
+import { useAptabase } from '@aptabase/react';
+
+export function TestEventButton() {
+  const { trackEvent } = useAptabase();
+
+  function handleClick() {
+    trackEvent('test_event', { source: 'quickstart' });
+  }
+
+  return <button onClick={handleClick}>Send test event</button>;
+}
+```
+
+Render `<TestEventButton />` anywhere inside `AptabaseProvider`, start your app locally (e.g. `npm run dev`) and click the button.
+
+### Confirm the event in the dashboard
+
+1. Open your app in the Aptabase dashboard ([us.aptabase.com](https://us.aptabase.com) or [eu.aptabase.com](https://eu.aptabase.com), depending on your App Key region).
+2. Select the **Debug** build mode using the Bug/Rocket icon at the top right, next to the date picker. Events sent while running on `localhost` or with `NODE_ENV=development` are recorded as **Debug**; production builds are recorded as **Release**. An orange ribbon at the top of the screen means you're looking at Debug data. See [Build Modes](https://aptabase.com/docs/build-modes) for details.
+3. Open **Live View** from the left menu. Your `test_event` shows up within a few seconds.
+
+If nothing shows up, check the browser console for `Aptabase:` warnings (e.g. an invalid App Key or a component rendered outside `AptabaseProvider`).
 
 ## Tracking Events with Aptabase
 
-After setting up the `AptabaseProvider`, you can then start tracking events using the `useAptabase` hook.
+Once your first event shows up, track the user actions you care about the same way. Here's an example of a simple counter component that tracks the `increment` and `decrement` events:
 
-Here's an example of a simple counter component that tracks the `increment` and `decrement` events:
-
-```js
+```tsx
 'use client';
 
 import { useState } from 'react';
@@ -126,13 +163,15 @@ export function Counter() {
   const [count, setCount] = useState(0);
 
   function increment() {
-    setCount((c) => c + 1);
-    trackEvent('increment', { count });
+    const next = count + 1;
+    setCount(next);
+    trackEvent('increment', { count: next });
   }
 
   function decrement() {
-    setCount((c) => c - 1);
-    trackEvent('decrement', { count });
+    const next = count - 1;
+    setCount(next);
+    trackEvent('decrement', { count: next });
   }
 
   return (
@@ -145,10 +184,35 @@ export function Counter() {
 }
 ```
 
+## Where to call `trackEvent`
+
+Track **user actions**, not rendering. Call `trackEvent` from event handlers like `onClick`, `onSubmit` or `onChange`, never directly in the component body or inside `useEffect`.
+
+React may render a component many times for reasons that have nothing to do with the user (state updates, parent re-renders, Strict Mode running renders and effects twice in development). An event tracked from render logic counts those re-renders as user activity and inflates your numbers.
+
+```tsx
+// ❌ Don't: runs on every render
+function Settings() {
+  const { trackEvent } = useAptabase();
+  trackEvent('settings_viewed');
+  // ...
+}
+
+// ✅ Do: runs once per user action
+function Settings() {
+  const { trackEvent } = useAptabase();
+
+  function handleSave() {
+    trackEvent('settings_saved', { theme: 'dark' });
+  }
+
+  return <button onClick={handleSave}>Save</button>;
+}
+```
+
 A few important notes:
 
 1. The SDK will automatically enhance the event with some useful information, like the OS and other properties.
 2. You're in control of what gets sent to Aptabase. This SDK does not automatically track any events, you need to call `trackEvent` manually.
-   - Because of this, it's generally recommended to at least track an event at startup
 3. You do not need to await the `trackEvent` function, it'll run in the background.
-4. Only strings and numeric values are allowed on custom properties
+4. Only strings, numbers and booleans are allowed on custom properties.
